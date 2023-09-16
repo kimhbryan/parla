@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv, find_dotenv
 import os
 import requests
@@ -12,6 +13,8 @@ COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
 cohere = cohere.Client(COHERE_API_KEY)
 
 app = Flask(__name__)
+CORS(app, origins='http://localhost:3000', methods=['GET', 'POST'], allow_headers=['Content-Type'])
+
 
 UPLOAD_FOLDER = "./"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -40,6 +43,7 @@ def chat(topic):
 
 
 @app.route("/transcribe", methods=['POST'])
+@cross_origin()
 def transcribe_audio():
     if request.method == 'POST':
         f = request.form['audio']
