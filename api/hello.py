@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from dotenv import load_dotenv, find_dotenv
 import os
 import requests
@@ -14,18 +14,20 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route("/chat")
+@app.route("/chat", methods=['POST'])
 def chat():
-    message = "hi"
-    response = cohere.chat(
-        message,
-        model="command",
-        temperature=0.9
-    )
+    if request.method == 'POST':
+        message = request.form.get('message')
+        chat_history = request.form.get('chat_history', [])
+        response = cohere.chat(
+            message=message,
+            chat_history=chat_history,
+            model="command-nightly"
 
-    answer = response.text
+        )
 
-    return answer
+        answer = response.text
+        return answer
 
 @app.route("/analyzetext")
 def analyzetext():
@@ -37,4 +39,8 @@ def analyzetext():
     res = requests.post(url=url, params=params)
 
     return res.json()
+
+if __name__ == '__main__':
+    app.run()
+
 
