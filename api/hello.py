@@ -13,15 +13,18 @@ cohere = cohere.Client(COHERE_API_KEY)
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
+
 
 @app.route("/chat/<topic>", methods=['POST'])
 def chat(topic):
     if request.method == 'POST':
         message = request.form.get('message')
-        message = f"The follwing input is from a chat about {topic}. Pretend that you are a human agreeing with the user about {topic}. Respond with an appropriate response based on the chat history and context." + message + "In short, the out put should be no longer 2 sentence long answer."
+        message = f"The follwing input is from a chat about {topic}. Pretend that you are a human agreeing with the user about {topic}. Respond with an appropriate response based on the chat history and context." + \
+            message + "In short, the out put should be no longer 2 sentence long answer."
         chat_history = request.form.get('chat_history', [])
         response = cohere.chat(
             message=message,
@@ -32,6 +35,7 @@ def chat(topic):
 
         answer = response.text
         return answer
+
 
 def transcribe_audio(file_path):
     client = speech.SpeechClient()
@@ -48,7 +52,8 @@ def transcribe_audio(file_path):
 
     response = client.recognize(config=config, audio=audio)
 
-    transcript = "".join([result.alternatives[0].transcript for result in response.results])
+    transcript = "".join(
+        [result.alternatives[0].transcript for result in response.results])
 
     return transcript
 
@@ -61,6 +66,7 @@ def translate_text(target_lang, text):
     result = client.translate(text, target_language=target_lang)
 
     return result["translatedText"]
+
 
 @app.route("/generate")
 def generate(context: str, subject: str) -> str:
@@ -77,7 +83,7 @@ def generate(context: str, subject: str) -> str:
     response = cohere.generate(
         prompt,
         model="command",
-        max_tokens=200          
+        max_tokens=200
     )
 
     generated = ""
@@ -86,6 +92,7 @@ def generate(context: str, subject: str) -> str:
         generated += gen.text
 
     return generated
+
 
 @app.route("/analyze")
 def analyzetext(text: str, lang: str) -> (bool, str):
@@ -103,7 +110,7 @@ def analyzetext(text: str, lang: str) -> (bool, str):
     params = {
         "text": text,
         "language": lang,
-        }
+    }
     res = requests.post(url=url, params=params)
 
     grammar_err = False
@@ -115,6 +122,7 @@ def analyzetext(text: str, lang: str) -> (bool, str):
 
     return (grammar_err, err_desc)
 
+
 @app.route("/feedback")
 def feedback(user_transcript=[], lang="en") -> json:
     """Generates feedback for the user based on the transcript of the conversation
@@ -124,7 +132,7 @@ def feedback(user_transcript=[], lang="en") -> json:
     lang: The language that the user has spoken
 
     Returns:
-    A json dict with recommendations for each erroneous paragraph with the index as the key, 
+    A json dict with recommendations for each erroneous paragraph with the index as the key,
     as well as an overall recommendation corresponding to the key "overall"
     """
     context = "Give a correct version of the following grammatically incorrect paragraph:"
@@ -133,7 +141,7 @@ def feedback(user_transcript=[], lang="en") -> json:
 
     # add recommendations for specific sections
     for id, seq in enumerate(user_transcript):
-        err = analyzetext(seq, lang)    
+        err = analyzetext(seq, lang)
         if err[0]:
             recommendations[id] = generate(context, seq)
             comments += err[1]
@@ -146,6 +154,7 @@ def feedback(user_transcript=[], lang="en") -> json:
         recommendations["overall"] = overall_rec
 
     return json.dumps(recommendations)
+
 
 if __name__ == '__main__':
     app.run()
