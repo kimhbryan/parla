@@ -58,14 +58,16 @@ def transcribe_audio(file_path):
     return transcript
 
 
-def translate_text(target_lang, text):
-    client = translate.Client()
+@app.route("/translate", methods=["POST"])
+def translate_text():
+    if request.method == "POST":
+        text = request.args.get("text")
+        target = request.args.get("target")
 
-    text = text.decode("utf-8")
+        client = translate.Client()
+        result = client.translate(text, target_language=target)
 
-    result = client.translate(text, target_language=target_lang)
-
-    return result["translatedText"]
+        return result["translatedText"]
 
 
 @app.route("/generate")
