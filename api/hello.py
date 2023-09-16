@@ -64,5 +64,15 @@ def transcribe_audio(file_path):
     return transcript
 
 
+def translate_text(target_lang, text):
+    client = translate.Client()
+
+    text = text.decode("utf-8")
+
+    result = client.translate(text, target_language=target_lang)
+
+    return result["translatedText"]
+
+
 if __name__ == '__main__':
     app.run()
