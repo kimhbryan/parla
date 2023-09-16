@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv, find_dotenv
 import os
@@ -60,11 +60,12 @@ def transcribe_audio():
         )
 
         response = client.recognize(config=config, audio=audio)
-
-        transcript = "".join(
-            [result.alternatives[0].transcript for result in response.results])
-
-        return response
+        output = ""
+        # transcript = "".join(
+        #     [result.alternatives[0].transcript for result in response.results])
+        for result in response.results:
+            output += result.alternatives[0].transcript
+        return jsonify({"output": output})
 
 
 @app.route("/translate", methods=["POST"])
