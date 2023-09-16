@@ -1,6 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv, find_dotenv
 import os
+import requests
 import cohere
 
 load_dotenv(find_dotenv())
@@ -24,5 +25,16 @@ def chat():
 
     answer = response.text
 
+    return answer
 
+@app.route("/analyzetext")
+def analyzetext():
+    url = "https://api.languagetoolplus.com/v2/check"
+    params = {
+        "text": "J'aime les baguettes mais je n'aime pas las filles",
+        "language": "fr",
+        }
+    res = requests.post(url=url, params=params)
+
+    return res.json()
 
