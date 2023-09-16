@@ -13,6 +13,8 @@ cohere = cohere.Client(COHERE_API_KEY)
 
 app = Flask(__name__)
 
+UPLOAD_FOLDER = "./"
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
 def hello_world():
@@ -37,25 +39,28 @@ def chat(topic):
         return answer
 
 
-def transcribe_audio(file_path):
-    client = speech.SpeechClient()
+@app.route("/transcribe", methods=['POST'])
+def transcribe_audio():
+    if request.method == 'POST':
+        f = request.form['audio']
+        client = speech.SpeechClient()
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'], "tmp.wav"))
+        with open("tmp.wav", rb) as a:
+            content = a.read()
 
-    with open(file_path, "rb") as f:
-        content = f.read()
+        audio = speech.RecognitionAudio(content=content)
+        config = speech.RecognitionConfig(
+            # encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+            # sample_rate_hertz=44100,
+            language_code="en-CA"
+        )
 
-    audio = speech.RecognitionAudio(content=content)
-    config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=44100,
-        language_code=lang_code
-    )
+        response = client.recognize(config=config, audio=audio)
 
-    response = client.recognize(config=config, audio=audio)
+        transcript = "".join(
+            [result.alternatives[0].transcript for result in response.results])
 
-    transcript = "".join(
-        [result.alternatives[0].transcript for result in response.results])
-
-    return transcript
+        return transcript
 
 
 @app.route("/translate", methods=["POST"])
