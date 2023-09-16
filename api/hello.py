@@ -28,8 +28,11 @@ def hello_world():
 def chat(topic):
     if request.method == 'POST':
         message = request.form.get('message')
-        message = f"The follwing input is from a chat about {topic}. Pretend that you are a human agreeing with the user about {topic}. Respond with an appropriate response based on the chat history and context." + \
-            message + "In short, the out put should be no longer 2 sentence long answer."
+        skill_context = "The following input was spoken by a person. Rate this person's language skills by responding one of beginner, intermediate, or advanced:"
+        skill = generate(skill_context, message)
+        message = f"The following input is from a chat about {topic}. Pretend that you are a human agreeing with the user about {topic}." + \
+            message + "Respond with an appropriate response based on the chat history and context, as well as the fact that the user has " + skill + " language proficiency." + \
+            message + "In short, the out put should be no longer than a 2 sentence long answer."
         chat_history = request.form.get('chat_history', [])
         response = cohere.chat(
             message=message,
@@ -80,7 +83,7 @@ def translate_text():
         return result["translatedText"]
 
 
-@app.route("/generate")
+@app.route("/generate/<context>/<subject>")
 def generate(context: str, subject: str) -> str:
     """ Calls cohere's generation feature with a strict context-subject format
 
