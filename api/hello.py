@@ -14,10 +14,11 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route("/chat", methods=['POST'])
-def chat():
+@app.route("/chat/<topic>", methods=['POST'])
+def chat(topic):
     if request.method == 'POST':
         message = request.form.get('message')
+        message = f"The follwing input is from a chat about {topic}. Pretend that you are a human agreeing with the user about {topic}. Respond with an appropriate response based on the chat history and context." + message + "In short, the out put should be no longer 2 sentence long answer."
         chat_history = request.form.get('chat_history', [])
         response = cohere.chat(
             message=message,
