@@ -64,7 +64,7 @@ def transcribe_audio():
         transcript = "".join(
             [result.alternatives[0].transcript for result in response.results])
 
-        return transcript
+        return response
 
 
 @app.route("/translate", methods=["POST"])
