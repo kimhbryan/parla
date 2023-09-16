@@ -3,6 +3,8 @@ from dotenv import load_dotenv, find_dotenv
 import os
 import requests
 import cohere
+from google.cloud import speech
+from google.cloud import translate_v2 as translate
 
 load_dotenv(find_dotenv())
 COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
@@ -41,7 +43,26 @@ def analyzetext():
 
     return res.json()
 
+
+def transcribe_audio(file_path):
+    client = speech.SpeechClient()
+
+    with open(file_path, "rb") as f:
+        content = f.read()
+
+    audio = speech.RecognitionAudio(content=content)
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=44100,
+        language_code=lang_code
+    )
+
+    response = client.recognize(config=config, audio=audio)
+
+    transcript = "".join([result.alternatives[0].transcript for result in response.results]))
+
+    return transcript
+
+
 if __name__ == '__main__':
     app.run()
-
-
