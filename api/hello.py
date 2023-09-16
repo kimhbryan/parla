@@ -59,7 +59,7 @@ def transcribe_audio(file_path):
 
     response = client.recognize(config=config, audio=audio)
 
-    transcript = "".join([result.alternatives[0].transcript for result in response.results]))
+    transcript = "".join([result.alternatives[0].transcript for result in response.results])
 
     return transcript
 
