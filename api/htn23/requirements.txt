@@ -1,4 +1,0 @@
-python-dotenv
-cohere
-flask
-requests
