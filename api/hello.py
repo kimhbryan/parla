@@ -25,7 +25,15 @@ def hello_world():
 
 
 @app.route("/chat/<topic>", methods=['POST'])
-def chat(topic):
+def chat(topic) -> str:
+    """Calls cohere's chat feature with custom context
+
+    Parameters
+    topic: the topic that the user has selected.
+
+    Returns:
+    The generated response from cohere in string format
+    """
     if request.method == 'POST':
         message = request.form.get('message')
         skill_context = "The following input was spoken by a person. Rate this person's language skills by responding one of beginner, intermediate, or advanced:"
@@ -83,7 +91,7 @@ def translate_text():
         return result["translatedText"]
 
 
-@app.route("/generate/<context>/<subject>")
+@app.route("/generate")
 def generate(context: str, subject: str) -> str:
     """ Calls cohere's generation feature with a strict context-subject format
 
@@ -139,7 +147,7 @@ def analyzetext(text: str, lang: str) -> (bool, str):
 
 
 @app.route("/feedback")
-def feedback(user_transcript=[], lang="en") -> json:
+def feedback() -> json:
     """Generates feedback for the user based on the transcript of the conversation
 
     Parameters
@@ -150,6 +158,14 @@ def feedback(user_transcript=[], lang="en") -> json:
     A json dict with recommendations for each erroneous paragraph with the index as the key,
     as well as an overall recommendation corresponding to the key "overall"
     """
+    data = request.json
+    if "user_transcript" not in data:
+        return jsonify({'error': 'Missing user_transcript in request body'}), 400
+    if "lang" not in data:
+        return jsonify({'error': 'Missing lang in request body'}), 400 
+    
+    user_transcript = data["user_transcript"]
+    lang = data["lang"]
     context = "Give a correct version of the following grammatically incorrect paragraph:"
     recommendations = dict()
     comments = ""
