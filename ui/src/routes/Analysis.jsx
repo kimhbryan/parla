@@ -16,7 +16,7 @@ const Analysis = () => {
             <ChatHeader topic={"Analysis Results"} darkMode={true}/>
             <BlobsLight className="fixed w-100 h-100 z-0"/>
             <h3 className="z-20 text-black">Thank you for learning with <i clasName="font-bold">Parla</i> today.</h3>
-            <Tab.Group className="z-20 w-3/5 rounded-xl border-2 border-[rgba(255,127,99,0.3)] mt-10" as="div">
+            <Tab.Group className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 w-3/5 rounded-xl border-2 border-[rgba(255,127,99,0.3)] mt-10" as="div">
             <Tab.List  as="div" className="grid grid-cols-3 m-0 justify-around space-x-1 rounded-t-xl bg-[rgba(217,166,229,0.28)]">
                 {
                     tabHeaders.map((header, index) => {
@@ -34,11 +34,11 @@ const Analysis = () => {
                     })
                 }
             </Tab.List>
-            <Tab.Panels as="div">
+            <Tab.Panels as="div" className="border-b-0">
                 {
                     tabContent.map((content, index) => {
                         return(
-                            <Tab.Panel className="text-black">
+                            <Tab.Panel className="text-black border-bottom-none">
                                 <AnalysisPanel />
                             </Tab.Panel>
                         )

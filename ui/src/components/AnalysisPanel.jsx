@@ -1,5 +1,6 @@
 import ChatRecord from "./ChatRecord";
 import ComfortRecord from "./ComfortRecord";
+import ErrorRecord from "./ErrorRecord";
 
 const AnalysisPanel = () => {
     return (
@@ -8,6 +9,7 @@ const AnalysisPanel = () => {
             <hr className="text-[rgba(255,193,180,1)]"/>
             <ComfortRecord />
             <hr className="text-[rgba(255,193,180,1)]"/>
+            <ErrorRecord />
 
         </>
     );
