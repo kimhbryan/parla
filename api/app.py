@@ -91,7 +91,7 @@ def transcribe_audio():
         )
         response = client.recognize(config=config, audio=audio)
         transcript = "".join([result.alternatives[0].transcript for result in response.results])
-        transcript = chr(ord(transcript[0])+ord('a')) + transcript[1:]
+        transcript = generate('This is a spell check generator that capitalizes and punctuates samples of text.\n\n', "nobody likes vegetables I don't like them either\nFixed: Nobody likes vegetables. I don't like them either.\n\nSample: are you sure you are a teacher\nFixed:Are you sure you are a teacher?\n\nSample: my favourite fruits are strawberries pears and watermelons\nFixed: My favourite fruits are strawberries, pears, and watermelons.\n\nSample: " + transcript + "\nFixed: ")
         return transcript
     return "Call from GET"
 
