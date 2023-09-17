@@ -21,7 +21,7 @@ const partitionLogs = (logs) => {
     })
 }
 
-const InputBar = ({logs, setLogs, topic, lang}) => {
+const InputBar = ({logs, setLogs, topic, lang, loading, setLoading}) => {
     const recorderControls = useAudioRecorder()
     const [isRecording, setIsRecording] = useState(false);
     const addAudioElement2 = async (blob) => {
@@ -30,8 +30,7 @@ const InputBar = ({logs, setLogs, topic, lang}) => {
         const translateForm = new FormData();
         const location = window.location.hostname;
         const logsCopy = [...logs]; // Make a copy of logs to avoid issues with state updates
-    
-    
+
         try {
             audioForm.append("blob", blob);
             audioForm.append("lang", lang);
@@ -94,7 +93,7 @@ const InputBar = ({logs, setLogs, topic, lang}) => {
                 />
             </div>
             {
-                logs.length <= 3 ?
+                logs.length < 6 ?
                 <RecordButton isRecording={isRecording} setIsRecording={setIsRecording} stopRecording={() => stopRecording()} startRecording={() => startRecording()}/>:
                 <Link className="border-none rounded-3xl w-30 h-15 bg-[#E0F1EA] text-[#355146] text-[0.75rem] font-semibold px-12 py-3 my-4" state={{chatHistory: partitionLogs(logs)}} to="/analysis">
                     View Analysis

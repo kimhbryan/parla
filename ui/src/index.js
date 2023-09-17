@@ -7,21 +7,20 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import Chat from "./routes/Chat";
 import Analysis from "./routes/Analysis";
-import Language from "./routes/Analysis";
+import Language from "./routes/Language";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Language />,
+  },
+  {
+    path: "/ai/:lang",
     element: <Home />,
   },
   {
-    path: "/chat",
-    children: [
-      {
-        path: "/chat/:lang/:topic",
-        element: <Chat />,
-      },
-    ],
+    path: "/chat/:lang/:topic",
+    element: <Chat />,
   },
   {
     path: "/analysis",

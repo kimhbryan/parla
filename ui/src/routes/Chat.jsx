@@ -5,7 +5,8 @@ import ChatLog from "../components/ChatLog";
 import InputBar from "../components/InputBar";
 
 const Chat = () => {
-    const [logs, setLogs] = useState([])
+    const [logs, setLogs] = useState([]);
+    const [loading, setLoading] = useState(false);
     const { topic, lang } = useParams();
     return(
         <>
@@ -18,7 +19,7 @@ const Chat = () => {
                 <ChatLog logs={logs} setLogs={setLogs}/>
             }
             {/* <ChatLog logs={logs} setLogs={setLogs}/> */}
-            <InputBar logs={logs} setLogs={setLogs} topic={topic} lang={lang}/>
+            <InputBar logs={logs} setLogs={setLogs} topic={topic} lang={lang} loading={loading} setLoading={setLoading}/>
         </> 
     );
 }
