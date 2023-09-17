@@ -51,12 +51,20 @@ def chat(topic) -> str:
         message = f"The following input is from a chat about {topic}. Pretend that you are a human agreeing with the user about {topic}." + \
             message + "Respond with an appropriate response based on the chat history and context, as well as the fact that the user has " + skill + " language proficiency." + \
             message + "In short, the out put should be no longer than a 2 sentence long answer."
-        chat_history = request.form.get('chat_history', [])
+        chat_history = request.form.get('chat_history', []).split("|")
+
+        chat_history_dicts= []
+        for entry in chat_history:
+            [role, msg] = entry.split(":")
+            chat_history_dicts.append({
+                "user_name": role,
+                "text": msg
+            })
+
         response = cohere.chat(
             message=message,
-            chat_history=chat_history,
+            chat_history=chat_history_dicts,
             model="command-nightly"
-
         )
 
         answer = response.text
@@ -74,9 +82,9 @@ def transcribe_audio():
         content = f.read()
         audio = speech.RecognitionAudio(content=content)
         config = speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.OGG_OPUS,
+            encoding=speech.RecognitionConfig.AudioEncoding.WEBM_OPUS,
             sample_rate_hertz=48000,
-            audio_channel_count=2,
+            audio_channel_count=1,
             language_code="en-CA",
         )
         response = client.recognize(config=config, audio=audio)
