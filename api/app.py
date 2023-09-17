@@ -72,7 +72,7 @@ def chat(topic) -> str:
         response = cohere.chat(
             message=message,
             chat_history=chat_history_dicts,
-            model="command-nightly"
+            model="command-light"
         )
 
         answer = response.text

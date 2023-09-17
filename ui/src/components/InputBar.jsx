@@ -29,36 +29,6 @@ const convertBlobToWav = (blob) => {
 const InputBar = ({logs, setLogs, topic, lang}) => {
     const recorderControls = useAudioRecorder()
     const [isRecording, setIsRecording] = useState(false);
-    // const addAudioElement = (blob) => {
-    //     const audioForm = new FormData();
-    //     const chatForm = new FormData();
-    //     audioForm.append("blob", blob);
-
-    //     axios.post('http://localhost:5000/transcribe', audioForm, {
-    //         headers: {
-    //             "Content-Type": "multipart/form-data",
-    //         },
-    //     }).then((transcribeResponse) => {
-    //         chatForm.append("message", transcribeResponse.data);
-    //         chatForm.append("chat_history", logs.join('|'));
-    //         axios.post(`http://localhost:5000/chat/${topic}`, chatForm, {
-    //             headers: {
-    //                 "Content-Type": "multipart/form-data",
-    //             },
-    //         }).then((chatResponse) => {
-    //             setLogs((logs) => [...logs, `USER: ${transcribeResponse.data}`, `AI: ${chatResponse.data}`])
-    //             console.log({
-    //                 success: chatResponse.data
-    //             })
-    //         }).catch((error) => {
-    //             console.log(error);
-    //         })
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     })
-
-
-    // }
     const addAudioElement2 = async (blob) => {
         const audioForm = new FormData();
         const chatForm = new FormData();
@@ -66,9 +36,10 @@ const InputBar = ({logs, setLogs, topic, lang}) => {
         const location = window.location.hostname;
         const logsCopy = [...logs]; // Make a copy of logs to avoid issues with state updates
     
-        audioForm.append("blob", blob);
     
         try {
+            audioForm.append("blob", blob);
+            audioForm.append("lang", lang);
             // Fetch transcription
             const fetchTranscribe = await fetch(`http://${location}:5000/transcribe`, {
                 method: 'POST',
@@ -90,12 +61,6 @@ const InputBar = ({logs, setLogs, topic, lang}) => {
             const chatResponse = await fetchChat.text();
             
             // // Update chatForm and fetch translation
-            console.log({
-
-                chatResponse:chatResponse,
-                lang:lang
-            }
-            )
             translateForm.append("text", chatResponse);
             translateForm.append("target", lang);
     
