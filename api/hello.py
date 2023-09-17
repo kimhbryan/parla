@@ -53,30 +53,30 @@ def chat(topic) -> str:
         return answer
 
 
-@app.route("/transcribe", methods=['POST'])
-@cross_origin()
-def transcribe_audio():
-    if request.method == 'POST':
-        f = request.form['audio']
-        client = speech.SpeechClient()
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'], "tmp.wav"))
-        with open("tmp.wav", rb) as a:
-            content = a.read()
+#@app.route("/transcribe", methods=['POST'])
+#@cross_origin()
+#def transcribe_audio():
+#    if request.method == 'POST':
+#        f = request.form['audio'
+#        client = speech.SpeechClient()
+#        f.save(os.path.join(app.config['UPLOAD_FOLDER'], "tmp.wav"))
+#        with open("tmp.wav", rb) as a:
+#            content = a.read()
+#
+#        audio = speech.RecognitionAudio(content=content)
+#        config = speech.RecognitionConfig(
+#            # encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+#            # sample_rate_hertz=44100,
+#            language_code="en-CA"
+#        )
 
-        audio = speech.RecognitionAudio(content=content)
-        config = speech.RecognitionConfig(
-            # encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-            # sample_rate_hertz=44100,
-            language_code="en-CA"
-        )
-
-        response = client.recognize(config=config, audio=audio)
-        output = ""
-        # transcript = "".join(
-        #     [result.alternatives[0].transcript for result in response.results])
-        for result in response.results:
-            output += result.alternatives[0].transcript
-        return jsonify({"output": output})
+#        response = client.recognize(config=config, audio=audio)
+#        output = ""
+#        # transcript = "".join(
+#        #     [result.alternatives[0].transcript for result in response.results])
+#        for result in response.results:
+#            output += result.alternatives[0].transcript
+#        return jsonify({"output": output})
 
 
 @app.route("/translate", methods=["POST"])
