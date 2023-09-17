@@ -147,7 +147,7 @@ def analyzetext(text: str, lang: str) -> (bool, str):
     return (grammar_err, err_desc)
 
 
-@app.route("/feedback")
+@app.route("/feedback", methods=["POST"])
 def feedback() -> json:
     """Generates feedback for the user based on the transcript of the conversation
 
@@ -159,15 +159,12 @@ def feedback() -> json:
     A json dict with recommendations for each erroneous paragraph with the index as the key,
     as well as an overall recommendation corresponding to the key "overall"
     """
-    data = request.json
-    if "user_transcript" not in data:
-        return jsonify({'error': 'Missing user_transcript in request body'}), 400
-    if "lang" not in data:
-        return jsonify({'error': 'Missing lang in request body'}), 400 
+    user_transcript = request.form.getlist('user_transcript')
+    print(user_transcript)
+    lang = request.form.get('lang', "en", str)
     
-    user_transcript = data["user_transcript"]
-    lang = data["lang"]
-    context = "Give a correct version of the following grammatically incorrect paragraph:"
+    grammar_context = "Give a correct version of the following grammatically incorrect paragraph:"
+    confidence_context = "The following input was spoken by a person. Rate this person's speech confidence by responding a number between 0 and 100:"
     recommendations = dict()
     comments = ""
 
@@ -175,11 +172,13 @@ def feedback() -> json:
     for id, seq in enumerate(user_transcript):
         err = analyzetext(seq, lang)
         if err[0]:
-            recommendations[id] = generate(context, seq)
+            grammar_rec = generate(grammar_context, seq)
+            confidence_rating = generate(confidence_context, seq)
+            recommendations[id] = (grammar_rec, confidence_rating)
             comments += err[1]
 
     # add overall recommendation
-    context = "Give an short summarized overall recommendation only for a person in order to improve their speaking based on the following obervations about a person's speaking:"
+    context = "Give an short, maximum 3 sentence summarized overall recommendation only for a person in order to improve their speaking based on the following obervations about a person's speaking:"
 
     if len(recommendations) >= 1:
         overall_rec = generate(context, comments)
