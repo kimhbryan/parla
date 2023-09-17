@@ -202,7 +202,7 @@ def feedback() -> json:
     # print(lang)
 
     grammar_context = "Give a correct version of the following grammatically incorrect paragraph of similar length:"
-    confidence_context = "The following input was spoken by a person. Rate this person's speech confidence by responding a number between 0 and 100:"
+    confidence_context = "The following input was spoken by a person. Rate this person's speech confidence by responding a number between 0 and 100 and nothing else:"
     recommendations = dict()
     comments = ""
 
