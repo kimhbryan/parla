@@ -90,17 +90,23 @@ const InputBar = ({logs, setLogs, topic, lang}) => {
             const chatResponse = await fetchChat.text();
             
             // // Update chatForm and fetch translation
-            // chatForm.append("text", chatResponse);
-            // chatForm.append("target", lang);
+            console.log({
+
+                chatResponse:chatResponse,
+                lang:lang
+            }
+            )
+            translateForm.append("text", chatResponse);
+            translateForm.append("target", lang);
     
-            // // Fetch translation
-            // const fetchTranslate = await fetch(`http://${location}:5000/translate`, {
-            //     method: 'POST',
-            //     body: translateForm,
-            // });
-            // const translateResponse = await fetchTranslate.text();
+            // Fetch translation
+            const fetchTranslate = await fetch(`http://${location}:5000/translate`, {
+                method: 'POST',
+                body: translateForm,
+            });
+            const translateResponse = await fetchTranslate.text();
             // console.log(translateResponse);
-            setLogs((logs) => [...logs, `USER: ${transcribeResponse}`, `AI: ${chatResponse}`]);
+            setLogs((logs) => [...logs, `USER: ${transcribeResponse}`, `AI: ${translateResponse}`]);
         } catch (e) {
             console.error(e); // Handle errors more gracefully, e.g., show an error message
         }

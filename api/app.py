@@ -8,6 +8,7 @@ import json
 from google.cloud import speech
 from google.cloud import translate_v2 as translate
 import google.auth
+import html
 
 
 load_dotenv(find_dotenv())
@@ -96,8 +97,8 @@ def transcribe_audio():
 @app.route("/translate", methods=["POST"])
 def translate_text():
     if request.method == "POST":
-        text = request.form.get("text")
-        target = request.form.get("target")
+        text = request.values["text"]
+        target = request.values["target"]
 
         client = translate.Client(
             #client_options={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
@@ -105,7 +106,7 @@ def translate_text():
         )
         result = client.translate(text, target_language=target)
 
-        return result["translatedText"]
+        return html.unescape(result["translatedText"])
 
 
 @app.route("/generate")
