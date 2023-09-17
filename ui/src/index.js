@@ -1,15 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import Home from './routes/Home';
-import './App.css';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import reportWebVitals from './reportWebVitals';
-import Chat from './routes/Chat';
-import Analysis from './routes/Analysis';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import Home from "./routes/Home";
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import reportWebVitals from "./reportWebVitals";
+import Chat from "./routes/Chat";
+import Analysis from "./routes/Analysis";
+import Language from "./routes/Analysis";
 
 const router = createBrowserRouter([
   {
@@ -23,15 +21,15 @@ const router = createBrowserRouter([
         path: "/chat/:lang/:topic",
         element: <Chat />,
       },
-    ]
+    ],
   },
   {
     path: "/analysis",
-    element: <Analysis />
+    element: <Analysis />,
   },
 ]);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     {/* <App /> */}
