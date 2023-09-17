@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 import Chat from './routes/Chat';
+import Analysis from './routes/Analysis';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
         element: <Chat />,
       },
     ]
+  },
+  {
+    path: "/analysis",
+    element: <Analysis />
   },
 ]);
 

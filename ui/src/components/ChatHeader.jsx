@@ -8,7 +8,7 @@ const ChatHeader = ({topic, darkMode}) => {
             <Link to="/">
                 <span className="inline-flex align-middle">
                     <Logo className="w-12 h-12"/>
-                    <h1 className={`font-semibold text-[1.5rem] ${darkMode?"text-white":"text-[#474747]"} self-center ml-4`}>App Name</h1>
+                    <h1 className={`font-semibold text-[1.5rem] ${darkMode?"text-white":"text-[#474747]"} self-center ml-4 italic`}>Parla</h1>
                 </span>
             </Link>
             <p className={`text-sm font-semibold ${darkMode?"text-white":"text-[#474747]"} self-center mt-3`}>{topic}</p>

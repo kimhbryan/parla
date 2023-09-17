@@ -99,7 +99,7 @@ const InputBar = ({logs, setLogs, topic, lang}) => {
                 />
             </div>
             {
-                logs.length <= 100 ?
+                logs.length <= 8 ?
                 <RecordButton isRecording={isRecording} setIsRecording={setIsRecording} stopRecording={() => stopRecording()} startRecording={() => startRecording()}/>:
                 <button className="border-none rounded-3xl w-30 h-15 bg-[#E0F1EA] text-[#355146] text-[0.75rem] font-semibold px-12 py-3 my-4">View Analysis</button>
             }
