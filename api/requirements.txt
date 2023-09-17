@@ -1,4 +1,7 @@
 python-dotenv
 cohere
 flask
+flask-cors
 requests
+google-cloud-speech
+google-cloud-translate
