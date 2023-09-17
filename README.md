@@ -1,6 +1,6 @@
 # Parla
 
-An adaptable conversational companion for learning languages
+An adaptable conversational companion for learning languages. Created for Hack the North 2023.
 
 ## Description
 
