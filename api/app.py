@@ -17,18 +17,25 @@ cohere = cohere.Client(COHERE_API_KEY)
 
 GOOGLE_CLOUD_API_KEY = os.environ.get("GOOGLE_CLOUD_API_KEY")
 GOOGLE_CLOUD_PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT_ID")
-GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get(
+    "GOOGLE_APPLICATION_CREDENTIALS")
 
 credentials, project = google.auth.default()
 
 
-
 app = Flask(__name__)
-CORS(app, origins='http://localhost:3000', methods=['GET', 'POST'], allow_headers=['Content-Type'])
+CORS(
+    app,
+    origins='http://localhost:3000',
+    methods=[
+        'GET',
+        'POST'],
+    allow_headers=['Content-Type'])
 
 
 UPLOAD_FOLDER = "./"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route("/")
 def hello_world():
@@ -54,7 +61,7 @@ def chat(topic) -> str:
             message + "In short, the out put should be no longer than a 2 sentence long answer."
         chat_history = request.form.get('chat_history', []).split("|")
 
-        chat_history_dicts= []
+        chat_history_dicts = []
         for entry in chat_history:
             [role, msg] = entry.split(":")
             chat_history_dicts.append({
@@ -79,7 +86,9 @@ def transcribe_audio():
         f = request.files["blob"]
         l = request.values["lang"]
         client = speech.SpeechClient(
-            client_options={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
+            client_options={
+                "api_key": GOOGLE_CLOUD_API_KEY,
+                "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
         )
         content = f.read()
         audio = speech.RecognitionAudio(content=content)
@@ -90,8 +99,13 @@ def transcribe_audio():
             language_code=l,
         )
         response = client.recognize(config=config, audio=audio)
-        transcript = "".join([result.alternatives[0].transcript for result in response.results])
-        transcript = generate('This is a spell check generator that capitalizes and punctuates samples of text.\n\n', "nobody likes vegetables I don't like them either\nFixed: Nobody likes vegetables. I don't like them either.\n\nSample: are you sure you are a teacher\nFixed:Are you sure you are a teacher?\n\nSample: my favourite fruits are strawberries pears and watermelons\nFixed: My favourite fruits are strawberries, pears, and watermelons.\n\nSample: " + transcript + "\nFixed: ")
+        transcript = "".join(
+            [result.alternatives[0].transcript for result in response.results])
+        transcript = generate(
+            'This is a spell check generator that capitalizes and punctuates samples of text.\n\n',
+            "nobody likes vegetables I don't like them either\nFixed: Nobody likes vegetables. I don't like them either.\n\nSample: are you sure you are a teacher\nFixed:Are you sure you are a teacher?\n\nSample: my favourite fruits are strawberries pears and watermelons\nFixed: My favourite fruits are strawberries, pears, and watermelons.\n\nSample: " +
+            transcript +
+            "\nFixed: ")
         return transcript
     return "Call from GET"
 
@@ -103,7 +117,7 @@ def translate_text():
         target = request.values["target"]
 
         client = translate.Client(
-            #client_options={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
+            # client_options={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
             credentials=credentials
         )
         result = client.translate(text, target_language=target)
@@ -181,7 +195,7 @@ def feedback() -> json:
     user_transcript = request.form.getlist('user_transcript')
     print(user_transcript)
     lang = request.form.get('lang', "en", str)
-    
+
     grammar_context = "Give a correct version of the following grammatically incorrect paragraph:"
     confidence_context = "The following input was spoken by a person. Rate this person's speech confidence by responding a number between 0 and 100:"
     recommendations = dict()
