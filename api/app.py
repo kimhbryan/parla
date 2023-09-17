@@ -12,6 +12,9 @@ load_dotenv(find_dotenv())
 COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
 cohere = cohere.Client(COHERE_API_KEY)
 
+GOOGLE_CLOUD_API_KEY = os.environ.get("GOOGLE_CLOUD_API_KEY")
+GOOGLE_CLOUD_PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT_ID")
+
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000', methods=['GET', 'POST'], allow_headers=['Content-Type'])
 
@@ -58,7 +61,9 @@ def chat(topic) -> str:
 def transcribe_audio():
     if request.method == 'POST':
         f = request.files["blob"]
-        client = speech.SpeechClient()
+        client = speech.SpeechClient(
+            client_options={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
+        )
         content = f.read()
         audio = speech.RecognitionAudio(content=content)
         config = speech.RecognitionConfig(
@@ -79,7 +84,9 @@ def translate_text():
         text = request.args.get("text")
         target = request.args.get("target")
 
-        client = translate.Client()
+        client = translate.Client(
+            client_config={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
+        )
         result = client.translate(text, target_language=target)
 
         return result["translatedText"]
