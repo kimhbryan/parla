@@ -4,7 +4,7 @@ import { ReactComponent as UserLogo } from "../images/userLogo.svg"
 const ErrorRecord = ({userMessage, feedback}) => {
     return (
         <div>
-            <div className="grid m-6">
+            <div className="grid m-4">
             <div className="flex flex-row">
                 <UserLogo className="w-8 h-10 mr-3"/>
                 <p className="text-sm text-left">{userMessage}</p>
