@@ -91,6 +91,7 @@ def transcribe_audio():
         )
         response = client.recognize(config=config, audio=audio)
         transcript = "".join([result.alternatives[0].transcript for result in response.results])
+        transcript = chr(ord(transcript[0])+ord('a')) + transcript[1:]
         return transcript
     return "Call from GET"
 
