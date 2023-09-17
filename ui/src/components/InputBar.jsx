@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import RecordButton from './RecordButton';
 import toWav from 'audiobuffer-to-wav';
+import axios from 'axios';
 
 const convertBlobToWav = (blob) => {
     return new Promise((resolve, reject) => {
@@ -28,34 +29,19 @@ const InputBar = () => {
     const recorderControls = useAudioRecorder()
     const [isRecording, setIsRecording] = useState(false);
     const addAudioElement = (blob) => {
-        const url = URL.createObjectURL(blob);
-        const audio = document.createElement("audio");
         const audioForm = new FormData();
-        audio.src = url;
-        audio.controls = true;
+        audioForm.append("blob", blob);
 
-        convertBlobToWav(blob)
-        .then((wav) => { 
-            audioForm.append("audio", wav);
+        axios.post('http://localhost:5000/transcribe', audioForm, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }).then((response) => {
+            console.log(response.data);
+        }).catch((error) => {
+            console.log(error);
         })
-        .catch((error) => {
-            console.error('Error converting Blob to WAV:', error);
-        });
-
-        fetch('https://localhost:5000/transcribe', {
-            method: 'POST',
-            body: audioForm
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                // Handle the response data
-                console.log(data);
-            })
-            .catch((error) => {
-                // Handle any errors
-                console.error(error);
-            });
-        };
+    }
     const startRecording = () => {
         recorderControls.startRecording();
         setIsRecording(true);
