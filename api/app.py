@@ -102,10 +102,13 @@ def transcribe_audio():
         transcript = "".join(
             [result.alternatives[0].transcript for result in response.results])
         transcript = generate(
-            'This is a spell check generator that capitalizes and punctuates samples of text.\n\n',
-            "nobody likes vegetables I don't like them either\nFixed: Nobody likes vegetables. I don't like them either.\n\nSample: are you sure you are a teacher\nFixed:Are you sure you are a teacher?\n\nSample: my favourite fruits are strawberries pears and watermelons\nFixed: My favourite fruits are strawberries, pears, and watermelons.\n\nSample: " +
-            transcript +
-            "\nFixed: ")
+            "The following sentence may have punctuation and capitalization errors. ONLY correct these errors and nothing else. Do not correct grammar. The sentence is:",
+            transcript)
+        # transcript = generate(
+        #     'This generation tool capitalizes and punctuates samples of text.\n\n',
+        #     "nobody likes vegetables I don't like them either\nFixed: Nobody likes vegetables. I don't like them either.\n\nSample: are you sure you are a teacher\nFixed:Are you sure you are a teacher?\n\nSample: my favourite fruits are strawberries pears and watermelons\nFixed: My favourite fruits are strawberries, pears, and watermelons.\n\nSample: " +
+        #     transcript +
+        #     "\nFixed: ")
         return transcript
     return "Call from GET"
 
@@ -192,9 +195,11 @@ def feedback() -> json:
     A json dict with recommendations for each erroneous paragraph with the index as the key,
     as well as an overall recommendation corresponding to the key "overall"
     """
-    user_transcript = request.form.getlist('user_transcript')
-    print(user_transcript)
+    # print(request.form)
+    user_transcript = request.form.getlist('user_transcript[]')
+    # print(user_transcript)
     lang = request.form.get('lang', "en", str)
+    # print(lang)
 
     grammar_context = "Give a correct version of the following grammatically incorrect paragraph:"
     confidence_context = "The following input was spoken by a person. Rate this person's speech confidence by responding a number between 0 and 100:"
@@ -203,9 +208,12 @@ def feedback() -> json:
 
     # add recommendations for specific sections
     for id, seq in enumerate(user_transcript):
+        # print((id, seq))
         err = analyzetext(seq, lang)
+        # print(err)
         if err[0]:
             grammar_rec = generate(grammar_context, seq)
+            # print(grammar_rec)
             confidence_rating = generate(confidence_context, seq)
             recommendations[id] = (grammar_rec, confidence_rating)
             comments += err[1]

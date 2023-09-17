@@ -1,5 +1,7 @@
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
+import { useEffect } from "react";
+import { useLocation, useParams } from "react-router";
 import AnalysisPanel from "../components/AnalysisPanel";
 import ChatHeader from "../components/ChatHeader";
 import {ReactComponent as BlobsLight} from "../images/blobsLight.svg"
@@ -11,11 +13,41 @@ const tabContent = ["Content 1", "Content 2", "Content 3"];
 
 
 const Analysis = () => {
+    const location = useLocation();
+    const {chatHistory} = location.state
+    const {lang} = useParams();
+    console.log(location.state)
+
+    useEffect(() => {
+        const getFeedback = async () => {
+            const feedbackForm = new FormData();
+            for (let i = 0; i < chatHistory.length; i++) {
+                console.log(chatHistory[i]["USER"])
+                feedbackForm.append(`user_transcript[]`, chatHistory[i]["USER"]);
+            }
+            const fetchFeedback = await fetch(`http://localhost:5000/feedback`, {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                body: feedbackForm,
+            });
+            
+            const feedbackJSON = await fetchFeedback.json();
+            console.log(feedbackJSON["1"])
+        
+        }
+        getFeedback();
+
+    });
+
+
+
     return (
         <div className="analysis w-screen h-screen">
             <ChatHeader topic={"Analysis Results"} darkMode={true}/>
             <BlobsLight className="fixed w-100 h-100 z-0"/>
-            <h3 className="z-20 text-black">Thank you for learning with <i clasName="font-bold">Parla</i> today.</h3>
+            <h3 className="z-20 text-black">Thank you for learning with <i className="font-bold">Parla</i> today.</h3>
             <Tab.Group className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 w-3/5 rounded-xl border-2 border-[rgba(255,127,99,0.3)] mt-10" as="div">
             <Tab.List  as="div" className="grid grid-cols-3 m-0 justify-around space-x-1 rounded-t-xl bg-[rgba(217,166,229,0.28)]">
                 {
@@ -36,10 +68,10 @@ const Analysis = () => {
             </Tab.List>
             <Tab.Panels as="div" className="border-b-0">
                 {
-                    tabContent.map((content, index) => {
+                    chatHistory.map((entry, index) => {
                         return(
                             <Tab.Panel className="text-black border-bottom-none">
-                                <AnalysisPanel />
+                                <AnalysisPanel userMessage={entry["USER"]} botMessage={entry["AI"]}/>
                             </Tab.Panel>
                         )
                     })

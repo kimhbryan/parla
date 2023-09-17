@@ -4,27 +4,22 @@ import RecordButton from './RecordButton';
 import toWav from 'audiobuffer-to-wav';
 import axios from 'axios';
 import { transform } from 'lodash';
+import { Link } from 'react-router-dom';
 
-const convertBlobToWav = (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const arrayBuffer = reader.result;
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        try {
-            audioContext.decodeAudioData(arrayBuffer, (audioBuffer) => {
-                const wav = toWav(audioBuffer);
-                resolve(wav);
-              });
-        } catch (e) {
-            console.log(`An error occured while converting blob: ${e}`)
+const partitionLogs = (logs) => {
+    var result = [];
+    for (var i = 0; i < logs.length; i += 2) {
+        result.push(logs.slice(i, i + 2));
+    }
+
+    return result.map((entry) => {
+        return {
+            [entry[0]?.split(":")[0]]: entry[0]?.split(":")[1],
+            [entry[1]?.split(":")[0]]: entry[1]?.split(":")[1],
         }
-        
-      };
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(blob);
-    });
-  };
+
+    })
+}
 
 const InputBar = ({logs, setLogs, topic, lang}) => {
     const recorderControls = useAudioRecorder()
@@ -99,9 +94,11 @@ const InputBar = ({logs, setLogs, topic, lang}) => {
                 />
             </div>
             {
-                logs.length <= 8 ?
+                logs.length <= 3 ?
                 <RecordButton isRecording={isRecording} setIsRecording={setIsRecording} stopRecording={() => stopRecording()} startRecording={() => startRecording()}/>:
-                <button className="border-none rounded-3xl w-30 h-15 bg-[#E0F1EA] text-[#355146] text-[0.75rem] font-semibold px-12 py-3 my-4">View Analysis</button>
+                <Link className="border-none rounded-3xl w-30 h-15 bg-[#E0F1EA] text-[#355146] text-[0.75rem] font-semibold px-12 py-3 my-4" state={{chatHistory: partitionLogs(logs)}} to="/analysis">
+                    View Analysis
+                </Link>
             }
         </div>
 
