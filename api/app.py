@@ -77,6 +77,7 @@ def chat(topic) -> str:
 def transcribe_audio():
     if request.method == 'POST':
         f = request.files["blob"]
+        l = request.values["lang"]
         client = speech.SpeechClient(
             client_options={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
         )
@@ -86,7 +87,7 @@ def transcribe_audio():
             encoding=speech.RecognitionConfig.AudioEncoding.WEBM_OPUS,
             sample_rate_hertz=48000,
             audio_channel_count=1,
-            language_code="en-CA",
+            language_code=l,
         )
         response = client.recognize(config=config, audio=audio)
         transcript = "".join([result.alternatives[0].transcript for result in response.results])
