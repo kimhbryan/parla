@@ -3,8 +3,7 @@ import { ReactComponent as BotLogo} from "../images/botLogo.svg";
 import { ReactComponent as UserLogo} from "../images/userLogo.svg";
 
 
-const ChatLog = () => {
-    const [logs, setLogs] = useState(["USER: hi", "AI: bye", "USER: hi", "AI: bye", "USER: hi", "AI: bye", "USER: hi", "AI: bye", "USER: hi", "AI: bye", "USER: hi", "AI: bye", "USER: hi", "AI: bye",])
+const ChatLog = ({logs, setLogs}) => {
     return (
         <div className="overflow-y-scroll h-full absolute bottom-[5rem] w-full">
             {

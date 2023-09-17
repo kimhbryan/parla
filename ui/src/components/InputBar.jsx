@@ -25,22 +25,38 @@ const convertBlobToWav = (blob) => {
     });
   };
 
-const InputBar = () => {
+const InputBar = ({logs, setLogs}) => {
     const recorderControls = useAudioRecorder()
     const [isRecording, setIsRecording] = useState(false);
     const addAudioElement = (blob) => {
         const audioForm = new FormData();
+        const chatForm = new FormData();
         audioForm.append("blob", blob);
 
         axios.post('http://localhost:5000/transcribe', audioForm, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
-        }).then((response) => {
-            console.log(response.data);
+        }).then((transcribeResponse) => {
+            chatForm.append("message", transcribeResponse.data);
+            chatForm.append("chat_history", logs);
+            axios.post('http://localhost:5000/chat', chatForm, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }).then((chatResponse) => {
+                setLogs((logs) => [...logs, `USER: ${transcribeResponse.data}`, `AI: ${chatResponse.data}`])
+                console.log({
+                    success: chatResponse.data
+                })
+            }).catch((error) => {
+                console.log(error);
+            })
         }).catch((error) => {
             console.log(error);
         })
+
+
     }
     const startRecording = () => {
         recorderControls.startRecording();
@@ -63,7 +79,11 @@ const InputBar = () => {
                     recorderControls={recorderControls}
                 />
             </div>
-            <RecordButton isRecording={isRecording} setIsRecording={setIsRecording} stopRecording={() => stopRecording()} startRecording={() => startRecording()}/>
+            {
+                logs.length <= 8 ?
+                <RecordButton isRecording={isRecording} setIsRecording={setIsRecording} stopRecording={() => stopRecording()} startRecording={() => startRecording()}/>:
+                <button className="border-none rounded-3xl w-30 h-15 bg-[#E0F1EA] text-[#355146] text-[0.75rem] font-semibold px-12 py-3 my-4">View Analysis</button>
+            }
         </div>
 
 
