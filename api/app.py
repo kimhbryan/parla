@@ -7,6 +7,8 @@ import cohere
 import json
 from google.cloud import speech
 from google.cloud import translate_v2 as translate
+import google.auth
+
 
 load_dotenv(find_dotenv())
 COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
@@ -14,6 +16,11 @@ cohere = cohere.Client(COHERE_API_KEY)
 
 GOOGLE_CLOUD_API_KEY = os.environ.get("GOOGLE_CLOUD_API_KEY")
 GOOGLE_CLOUD_PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT_ID")
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+
+credentials, project = google.auth.default()
+
+
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3000', methods=['GET', 'POST'], allow_headers=['Content-Type'])
@@ -81,11 +88,12 @@ def transcribe_audio():
 @app.route("/translate", methods=["POST"])
 def translate_text():
     if request.method == "POST":
-        text = request.args.get("text")
-        target = request.args.get("target")
+        text = request.form.get("text")
+        target = request.form.get("target")
 
         client = translate.Client(
-            client_config={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
+            #client_options={"api_key": GOOGLE_CLOUD_API_KEY, "quota_project_id": GOOGLE_CLOUD_PROJECT_ID}
+            credentials=credentials
         )
         result = client.translate(text, target_language=target)
 
