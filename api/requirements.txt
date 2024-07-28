@@ -1,7 +1,7 @@
 python-dotenv
-cohere
+cohere == 4.26.1
 flask
 flask-cors
 requests
-google-cloud-speech
-google-cloud-translate
+google-cloud-speech == 2.21.0
+google-cloud-translate == 3.12.0

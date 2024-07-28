@@ -19,12 +19,12 @@ const Language = () => {
         <Link className="bg-[#424242] text-sm px-20 py-4 text-[#E2E2E2] border-solid border-2 rounded-full font-semibold cursor-pointer"  to="/ai/fr">
           Français
         </Link>
-        <Link className="bg-[#424242] text-sm px-20 py-4 text-[#E2E2E2] border-solid border-2 rounded-full font-semibold cursor-pointer"  to="/ai/es">
+        <Link className="bg-[#424242] text-sm px-20 py-4 text-[#E2E2E2] border-solid border-2 rounded-full font-semibold cursor-pointer"  to="/ai/de">
           Deutsch
         </Link>
       </div>
       <div className="grid grid-cols-2 col-auto gap-2 mt-5 justify-center">
-        <Link className="bg-[#424242] text-sm px-20 py-4 text-[#E2E2E2] border-solid border-2 rounded-full font-semibold cursor-pointer"  to="/ai/de">
+        <Link className="bg-[#424242] text-sm px-20 py-4 text-[#E2E2E2] border-solid border-2 rounded-full font-semibold cursor-pointer"  to="/ai/es">
           Español
         </Link>
         <Link className="bg-[#424242] text-sm px-20 py-4 text-[#E2E2E2] border-solid border-2 rounded-full font-semibold cursor-pointer"  to="/ai/it">
