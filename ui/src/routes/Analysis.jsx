@@ -5,6 +5,7 @@ import { useLocation, useParams } from "react-router";
 import AnalysisPanel from "../components/AnalysisPanel";
 import ChatHeader from "../components/ChatHeader";
 import {ReactComponent as BlobsLight} from "../images/blobsLight.svg"
+import { URL } from "../constants/pathConstants"
 import "./analysis.css"
 
 const tabHeaders = ["Response 1", "Response 2", "Response 3"];
@@ -25,7 +26,7 @@ const Analysis = () => {
                 console.log(chatHistory[i]["USER"])
                 feedbackForm.append(`user_transcript[]`, chatHistory[i]["USER"]);
             }
-            const fetchFeedback = await fetch(`http://localhost:5000/feedback`, {
+            const fetchFeedback = await fetch(`${URL}/feedback`, {
                 method: 'POST',
                 header: {
                     'Content-Type': 'multipart/form-data'

@@ -5,6 +5,8 @@ import toWav from 'audiobuffer-to-wav';
 import axios from 'axios';
 import { transform } from 'lodash';
 import { Link } from 'react-router-dom';
+import { URL } from "../constants/pathConstants"
+
 
 const partitionLogs = (logs) => {
     var result = [];
@@ -35,7 +37,7 @@ const InputBar = ({logs, setLogs, topic, lang, loading, setLoading}) => {
             audioForm.append("blob", blob);
             audioForm.append("lang", lang);
             // Fetch transcription
-            const fetchTranscribe = await fetch(`http://${location}:5000/transcribe`, {
+            const fetchTranscribe = await fetch(`${URL}/transcribe`, {
                 method: 'POST',
                 body: audioForm,
             });
@@ -48,7 +50,7 @@ const InputBar = ({logs, setLogs, topic, lang, loading, setLoading}) => {
             chatForm.append("chat_history", logsCopy.join('|'));
     
             // Fetch chat response
-            const fetchChat = await fetch(`http://${location}:5000/chat/${topic}`, {
+            const fetchChat = await fetch(`${URL}/chat/${topic}`, {
                 method: 'POST',
                 body: chatForm,
             });
@@ -59,7 +61,7 @@ const InputBar = ({logs, setLogs, topic, lang, loading, setLoading}) => {
             translateForm.append("target", lang);
     
             // Fetch translation
-            const fetchTranslate = await fetch(`http://${location}:5000/translate`, {
+            const fetchTranslate = await fetch(`${URL}/translate`, {
                 method: 'POST',
                 body: translateForm,
             });

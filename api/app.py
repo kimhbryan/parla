@@ -58,7 +58,7 @@ def chat(topic) -> str:
         skill = generate(skill_context, message)
         message = f"The following input is from a chat about {topic}. Pretend that you are a human agreeing with the user about {topic}." + \
             message + "Respond with an appropriate response based on the chat history and context, as well as the fact that the user has " + skill + " language proficiency." + \
-            message + "In short, the out put should be no longer than a 2 sentence long answer."
+            message + "In summary, you should amicably respond and your output should be no longer than two sentences."
         chat_history = request.form.get('chat_history', []).split("|")
 
         chat_history_dicts = []
@@ -99,16 +99,21 @@ def transcribe_audio():
             language_code=l,
         )
         response = client.recognize(config=config, audio=audio)
+        print(response)
         transcript = "".join(
             [result.alternatives[0].transcript for result in response.results])
-        transcript = generate(
-            "The following sentence may have punctuation and capitalization errors. ONLY correct these errors and nothing else. Do not correct grammar. The sentence is:",
-            transcript)
+        #transcript = generate(
+        #    "The following sentence may have punctuation and capitalization errors. ONLY correct these errors and nothing else. Do not correct grammar. The sentence is:",
+        #    transcript)
         # transcript = generate(
         #     'This generation tool capitalizes and punctuates samples of text.\n\n',
         #     "nobody likes vegetables I don't like them either\nFixed: Nobody likes vegetables. I don't like them either.\n\nSample: are you sure you are a teacher\nFixed:Are you sure you are a teacher?\n\nSample: my favourite fruits are strawberries pears and watermelons\nFixed: My favourite fruits are strawberries, pears, and watermelons.\n\nSample: " +
         #     transcript +
-        #     "\nFixed: ")
+        #     "\nFixed: "
+        #     )
+        transcript = transcript.split()
+        transcript = transcript[0].title() + " " + " ".join(transcript[1:]) + "."
+        # transcript = transcript.title() + "."
         return transcript
     return "Call from GET"
 
