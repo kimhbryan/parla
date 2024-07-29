@@ -1,5 +1,5 @@
 import { Tab } from "@headlessui/react";
-import { classNames } from "classnames";
+import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import AnalysisPanel from "../components/AnalysisPanel";
