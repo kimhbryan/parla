@@ -2,6 +2,8 @@
 
 An adaptable conversational companion for learning languages. Created for Hack the North 2023.
 
+![Screenshot 2024-07-30 at 2 27 06 PM](https://github.com/user-attachments/assets/04148a65-7d35-487c-a229-2a6dd97d701c)
+
 ## Description
 
 Parla is the AI chat bot that has a real, natural conversation with you in your language of choice. Choose a language and a topic, and let the conversation flow naturally. As language learners ourselves, we made it a priority for Parla to be of use to learners of varying skill levels. Thus, Parla will adapt to your skill level throughout the conversation, giving more thought provoking prompts the higher your proficiency. When the conversation is over, Parla will analyze your speech, notifying you of grammatical errors, and giving recommendations on how to improve individual responses as well as your overall conversational ability. Parla will also provide useful metrics including speech timing, and will gauge your confidence level. 
